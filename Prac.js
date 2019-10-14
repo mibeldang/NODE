@@ -22,84 +22,83 @@ http.createServer((req, res) => {
 
 }).listen(8080);
 
-//Creating a database
-MongoClient.connect(url, (err, database) => {
-    if (err) throw Error;
-    console.log("Created a database");
-    database.close();
-})
+// //Creating a database
+// MongoClient.connect(url, (err, database) => {
+//     if (err) throw Error;
+//     console.log("Created a database");
+//     database.close();
+// })
 
-//Creating a collection of Students
-MongoClient.connect(url, (err, database) => {
-    if (err) throw Error;
-    var dbo = database.db("mydb");
-    dbo.createCollection("Students", (err, res) => {
-        if (err) throw Error;
-        console.log("Collection has been created..." + res);
-        database.close();
-    })
-})
+// //Creating a collection of Students
+// MongoClient.connect(url, (err, database) => {
+//     if (err) throw Error;
+//     var dbo = database.db("mydb");
+//     dbo.createCollection("Students", (err, res) => {
+//         if (err) throw Error;
+//         console.log("Collection has been created..." + res);
+//         database.close();
+//     })
+// })
 
 //Inserting many documents in a collection of student
-MongoClient.connect(url, (err, database) => {
-    if (err) throw Error;
-    var dbo = database.db("mydb");
-    var myObj = [
-        { name: "Luzmibel", address: "Santander, Cebu" },
-        { name: "Shadklyn", address: "Lapu Lapu City" },
-        { name: "Mae Luzyl", address: "Jimalalud Orriental" },
-        { name: "Dale Marck", address: "Santander, Cebu" },
-        { name: "Charles", address: "Carcar, Cebu" },
-        { name: "Vincent", address: "Dalaguete, Cebu" },
-        { name: "Melben", address: "Malabago, Negros" },
-        { name: "Mellalie", address: "Talamban, Cebu" }
-    ];
-    dbo.collection("Students").insertMany(myObj, (err, res) => {
-        if (err) throw Error;
-        console.log("Number of document inserted:  " + res.insertedCount);
-        database.close();
-    })
-})
+// MongoClient.connect(url, (err, database) => {
+//     if (err) throw Error;
+//     var dbo = database.db("mydb");
+//     var myObj = [
+//         { name: "Luzmibel", address: "Santander, Cebu" },
+//         { name: "Shadklyn", address: "Lapu Lapu City" },
+//         { name: "Mae Luzyl", address: "Jimalalud Orriental" },
+//         { name: "Dale Marck", address: "Santander, Cebu" },
+//         { name: "Charles", address: "Carcar, Cebu" },
+//         { name: "Vincent", address: "Dalaguete, Cebu" },
+//         { name: "Melben", address: "Malabago, Negros" },
+//         { name: "Mellalie", address: "Talamban, Cebu" }
+//     ];
+//     dbo.collection("Students").insertMany(myObj, (err, res) => {
+//         if (err) throw Error;
+//         console.log("Number of document inserted:  " + res.insertedCount);
+//         database.close();
+//     })
+// })
 
-//Finding one documents in the collection of Students
-MongoClient.connect(url, (err, database) => {
-    if (err) throw Error;
-    var dbo = database.db("mydb");
-    dbo.collection("Students").findOne({}, (err, result) => {
-        if (err) throw Error;
-        console.log(" First document seen: "+ result.name);
-        database.close();
-    })  
-})
+// // //Finding one documents in the collection of Students
+// MongoClient.connect(url, function(err, db) {
+//     if (err) throw err;
+//     var dbo = db.db("mydb");
+//     dbo.collection("Students").findOne({}, function(err, result) {
+//       if (err) throw err;
+//       console.log(result.name);
+//       db.close();
+//     });
+//   });
 
-//Find all documents in the collection of Students
-MongoClient.connect(url, (err, database) => {
-    if (err) throw Error;
-    var dbo = database.db("mydb");
-    dbo.collection("Students").find({}).toArray((err, res) => {
-        if (err) throw Error;
-        console.log("All documents are: "+ res.insertedCount );
-        database.close();
+// // Find all documents in the collection of Students
+// MongoClient.connect(url, function(err, db) {
+//     if (err) throw err;
+//     var dbo = db.db("mydb");
+//     dbo.collection("Students").find({}).toArray(function(err, result) {
+//       if (err) throw err;
+//       console.log(result);
+//       db.close();
+//     });
+//   });
 
-    })
-})
+// // //FindSome
+// MongoClient.connect(url, function (err, db) {
+//     if (err) throw err;
+//     var dbo = db.db("mydb");
+//     dbo.collection("Students").find({}, { projection: { _id: 0, name: 1, address: 1 } }).toArray(function (err, result) {
+//         if (err) throw err;
+//         console.log(result);
+//         db.close();
+//     });
+// });
 
-// //FindSome
-MongoClient.connect(url, (err, database) => {
-    if (err) throw Error;
-    var dbo = database.db("mydb");
-    dbo.collection("Students").find({}, { projection: { name: 1, address: 0} }).toArray((err, result) => {
-        if (err) throw Error;
-        console.log("FindSome result:" + result);
-        database.close();
-    })
-})
-
-//Finding documents with address of santander using query
+// //Finding documents with address of santander using query
 MongoClient.connect(url,(err,database)=>{
     if(err) throw Error;
     var dbo=database.db("mydb");
-    var query={address: "Santander,Cebu"};
+    var query={address: "Santander, Cebu"};
     dbo.collection("Students").find(query).toArray((err,result)=>{
         if (err) throw Error;
         console.log(result);
@@ -107,15 +106,61 @@ MongoClient.connect(url,(err,database)=>{
     })
 })
 
-MongoClient.connect(url,(err,database)=>{
-    if (err) throw Error;
-    var dbo=database.db("mydb");
-    var isort={name:1};
-    dbo.collection("Students").find().sort(isort).toArray((err,result)=>{
-        if (err) throw Error;
-        console.log(result);
-        database.close();
-    })
+// MongoClient.connect(url, function(err, db) {
+//     if (err) throw err;
+//     var dbo = db.db("mydb");
+//     var query = { address: "Santander, Cebu" };
+//     dbo.collection("Students").find(query).toArray(function(err, result) {
+//       if (err) throw err;
+//       console.log(result);
+//       db.close();
+//     });
+//   });
 
-})
 
+
+// Find All Alphabetically
+// MongoClient.connect(url,(err,database)=>{
+//     if (err) throw Error;
+//     var dbo=database.db("mydb");
+//     var isort={name:1};
+//     dbo.collection("Students").find().sort(isort).toArray((err,result)=>{
+//         if (err) throw Error;
+//         console.log(result);
+//         database.close();
+//     })
+
+// })
+
+// Delete table
+// MongoClient.connect(url, function(err, db) {
+//     if (err) throw err;
+//     var dbo = db.db("mydb");
+//     dbo.collection("Students").drop(function(err, delOK) {
+//       if (err) throw err;
+//       if (delOK) console.log("Collection deleted");
+//       db.close();
+//     });
+//   });
+
+// // Exclude Address
+// MongoClient.connect(url, function(err, db) {
+//     if (err) throw err;
+//     var dbo = db.db("mydb");
+//     dbo.collection("Students").find({}, { projection: { address: 0 } }).toArray(function(err, result) {
+//       if (err) throw err;
+//       console.log(result);
+//       db.close();
+//     });
+//   });
+
+// // Print only name
+// MongoClient.connect(url, function(err, db) {
+//     if (err) throw err;
+//     var dbo = db.db("mydb");
+//     dbo.collection("Students").find({}, { projection: { _id: 0, name: 1 } }).toArray(function(err, result) {
+//       if (err) throw err;
+//       console.log(result);
+//       db.close();
+//     });
+//   });
